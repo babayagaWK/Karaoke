@@ -1,7 +1,6 @@
 {
   "scheme": "vocalremover",
   "slug": "vocal-remover",
-  "assetBankDirs": [],
   "splash": {
     "backgroundColor": "#ffffff",
     "resizeMode": "contain",
