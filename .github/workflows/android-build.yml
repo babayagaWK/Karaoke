@@ -1,4 +1,4 @@
-name: Build Android APK (local)
+﻿name: Build Android APK (local)
 
 on:
   push:
@@ -11,10 +11,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -26,27 +26,36 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-      
+
+      - name: Setup Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: false
+
       - name: Generate native Android project
         env:
           EXPO_NO_INTERACTIVE: 1
-        run: npx expo prebuild --platform android --no-install --non-interactive
+        run: npx expo prebuild --platform android --clean --non-interactive
+
+      - name: Make Gradlew executable
+        run: chmod +x android/gradlew
 
       - name: Build release APK with Gradle
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleRelease
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: vocal-remover-app-apk
           path: android/app/build/outputs/apk/release/app-release.apk
-      
+
       - name: Upload to Releases
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
@@ -54,5 +63,3 @@ jobs:
           files: android/app/build/outputs/apk/release/app-release.apk
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
