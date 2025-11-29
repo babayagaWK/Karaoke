@@ -1,0 +1,24 @@
+﻿{
+    "scheme":  "vocalremover",
+    "slug":  "vocal-remover",
+    "assetBankDirs":  [
+
+                      ],
+    "splash":  {
+                   "backgroundColor":  "#ffffff",
+                   "resizeMode":  "contain",
+                   "image":  "./assets/splash.png"
+               },
+    "version":  "1.0.0",
+    "icon":  "./assets/icon.png",
+    "name":  "vocal-remover-app",
+    "platforms":  [
+                      "android",
+                      "ios",
+                      "web"
+                  ],
+    "updates":  {
+                    "fallbackToCacheTimeout":  0
+                },
+    "displayName":  "Vocal Remover AI"
+}
