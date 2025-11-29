@@ -1,24 +1,27 @@
-﻿{
-    "scheme":  "vocalremover",
-    "slug":  "vocal-remover",
-    "assetBankDirs":  [
-
-                      ],
-    "splash":  {
-                   "backgroundColor":  "#ffffff",
-                   "resizeMode":  "contain",
-                   "image":  "./assets/splash.png"
-               },
-    "version":  "1.0.0",
-    "icon":  "./assets/icon.png",
-    "name":  "vocal-remover-app",
-    "platforms":  [
-                      "android",
-                      "ios",
-                      "web"
-                  ],
-    "updates":  {
-                    "fallbackToCacheTimeout":  0
-                },
-    "displayName":  "Vocal Remover AI"
+{
+  "scheme": "vocalremover",
+  "slug": "vocal-remover",
+  "assetBankDirs": [],
+  "splash": {
+    "backgroundColor": "#ffffff",
+    "resizeMode": "contain",
+    "image": "./assets/splash.png"
+  },
+  "version": "1.0.0",
+  "icon": "./assets/icon.png",
+  "name": "vocal-remover-app",
+  "platforms": [
+    "android",
+    "ios",
+    "web"
+  ],
+  "updates": {
+    "fallbackToCacheTimeout": 0
+  },
+  "displayName": "Vocal Remover AI",
+  "extra": {
+    "eas": {
+      "projectId": "7c7d572f-6f0e-4b46-aca1-7d42157a8b68"
+    }
+  }
 }
