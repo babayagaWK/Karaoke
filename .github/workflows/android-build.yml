@@ -27,9 +27,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          api-level: 34
-          ndk-version: 26.3.11579264
 
       - name: Install npm dependencies
         run: npm install --legacy-peer-deps
@@ -37,8 +34,7 @@ jobs:
       - name: Generate Android project with Expo
         env:
           CI: 1
-        run: |
-          npx expo@54 prebuild --platform android --clean --no-install
+        run: npx expo prebuild --platform android --clean --non-interactive
 
       - name: Build APK with Gradle
         working-directory: android
@@ -46,7 +42,7 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleRelease \
             --no-daemon \
-            -Porg.gradle.jvmargs="-Xmx4g -XX:+UseG1GC" \
+            -Dorg.gradle.jvmargs="-Xmx4g -XX:+UseG1GC" \
             -Dorg.gradle.workers.max=2
 
       - name: Upload APK to artifacts
@@ -57,7 +53,7 @@ jobs:
           path: android/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: ignore
 
-      - name: Upload release
+      - name: Upload to Releases
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
@@ -68,7 +64,7 @@ jobs:
             ## Vocal Remover AI ${{ github.ref_name }}
             
             APK build complete!
-            - Install: Open APK on Android device
-            - Permissions: Microphone, Storage (for file mode)
+            - **Install**: Open APK on Android device
+            - **Permissions**: Microphone, Storage (for file mode)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
