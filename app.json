@@ -22,5 +22,9 @@
     "eas": {
       "projectId": "7c7d572f-6f0e-4b46-aca1-7d42157a8b68"
     }
+  },
+  "android": {
+    "package": "com.anonymous.vocalremover",
+    "kotlinVersion": "2.1.21"
   }
 }
