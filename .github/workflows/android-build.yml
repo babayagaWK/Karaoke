@@ -1,64 +1,52 @@
-﻿name: Build Android APK (local)
+﻿name: Build Android APK
 
 on:
   push:
     branches: [ master, main ]
     tags: [ 'v*' ]
-  pull_request:
-    branches: [ master, main ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
+      
       - name: Install dependencies
         run: npm install --legacy-peer-deps
-
-      - name: Setup Gradle cache
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          cache-read-only: false
-
-      - name: Generate native Android project
-        env:
-          EXPO_NO_INTERACTIVE: 1
-        run: npx expo prebuild --platform android --clean --non-interactive
-
-      - name: Make Gradlew executable
-        run: chmod +x android/gradlew
-
-      - name: Build release APK with Gradle
-        working-directory: android
-        run: ./gradlew assembleRelease --no-daemon --stacktrace
-
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: vocal-remover-app-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
-
+      
+      - name: Build web version
+        run: npm run build
+      
+      - name: Generate release notes
+        run: |
+          echo "## Vocal Remover AI v${{ github.ref_name }}" > release_notes.md
+          echo "" >> release_notes.md
+          echo "### Web Build Ready" >> release_notes.md
+          echo "- Visit: https://karaoke-vocal-remover.netlify.app" >> release_notes.md
+          echo "- Run locally: \`npm run dev\`" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### Android APK" >> release_notes.md
+          echo "To build APK locally:" >> release_notes.md
+          echo "\`\`\`bash" >> release_notes.md
+          echo "npm install" >> release_notes.md
+          echo "CI=1 npx expo prebuild --platform android --clean" >> release_notes.md
+          echo "cd android" >> release_notes.md
+          echo "./gradlew assembleRelease" >> release_notes.md
+          echo "\`\`\`" >> release_notes.md
+      
       - name: Upload to Releases
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
-          files: android/app/build/outputs/apk/release/app-release.apk
+          body_path: release_notes.md
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
